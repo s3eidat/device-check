@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Device Check — Test Webcam, Microphone, Speakers, Screen &amp; Keyboard | S3eidat Tools</title>
+<meta name="description" content="Test your webcam (resolution, fps), microphone (level meter, record and play back), speakers (left/right), screen (resolution, pixel ratio, refresh rate) and keyboard. Everything stays on your device.">
+<meta property="og:title" content="Device Check — webcam, mic, speakers, keyboard">
+<meta property="og:description" content="Check your camera, microphone, speakers, screen and keyboard before a call. Private, in your browser.">
+<meta property="og:image" content="screenshot.png">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+</head>
+<body data-tool="device-check">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Device Check</h1>
+    <p>Test your webcam, microphone, speakers, screen and keyboard before a call or after a new setup. Nothing is recorded or sent anywhere; the camera and mic only turn on when you ask.</p>
+  </section>
+
+  <div class="grid-2 dc-grid">
+    <section class="card stack" id="camCard">
+      <div class="row between"><h2>Camera</h2><span class="chip" id="camStatus">Off</span></div>
+      <div class="cam">
+        <video id="camVideo" muted playsinline hidden></video>
+        <div class="cam-empty" id="camEmpty"><svg class="i"><use href="#i-image"/></svg><span>Press Start camera to see a preview</span></div>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="camStart"><svg class="i"><use href="#i-play"/></svg><span>Start camera</span></button>
+        <button class="btn" id="camSnap" disabled><svg class="i"><use href="#i-download"/></svg>Snapshot</button>
+        <label class="check"><input type="checkbox" id="mirror" checked> Mirror</label>
+      </div>
+      <div class="grid-2 tight">
+        <label class="field">Camera <select class="select" id="camDev"><option value="">Default camera</option></select></label>
+        <label class="field">Resolution
+          <select class="select" id="camRes">
+            <option value="">Camera default</option>
+            <option value="480">480p</option>
+            <option value="720">720p HD</option>
+            <option value="1080">1080p Full HD</option>
+            <option value="2160">4K</option>
+          </select>
+        </label>
+      </div>
+      <dl class="kv" id="camInfo"></dl>
+    </section>
+
+    <section class="card stack" id="micCard">
+      <div class="row between"><h2>Microphone</h2><span class="chip" id="micStatus">Off</span></div>
+      <canvas class="mic-wave" id="micWave" aria-hidden="true"></canvas>
+      <div class="meter" aria-hidden="true"><i id="micLevel"></i><b id="micPeak"></b></div>
+      <div class="row between faint"><span id="micDb">— dB</span><span id="micHint"></span></div>
+      <div class="row">
+        <button class="btn primary" id="micStart"><svg class="i"><use href="#i-play"/></svg><span>Start microphone</span></button>
+        <button class="btn" id="micRec" disabled><span class="rec-dot"></span><span>Record 5 s &amp; play back</span></button>
+      </div>
+      <label class="field">Microphone <select class="select" id="micDev"><option value="">Default microphone</option></select></label>
+      <audio id="micPlay" controls hidden></audio>
+      <dl class="kv" id="micInfo"></dl>
+    </section>
+
+    <section class="card stack">
+      <h2>Speakers &amp; headphones</h2>
+      <div class="spk">
+        <button class="btn big" id="spkL" data-pan="-1">◀ Left</button>
+        <button class="btn big" id="spkC" data-pan="0">Both</button>
+        <button class="btn big" id="spkR" data-pan="1">Right ▶</button>
+      </div>
+      <button class="btn" id="sweep">Frequency sweep 20 Hz → 20 kHz (8 s)</button>
+      <label class="field range">Test volume <span class="val" id="spkVolV">40%</span><input type="range" id="spkVol" min="5" max="100" value="40"></label>
+      <p class="faint" id="spkNote">You should hear a chime from the side you picked. If left and right are swapped, check how the headphones are worn or your system balance. Start quiet.</p>
+    </section>
+
+    <section class="card stack">
+      <div class="row between"><h2>Screen</h2><button class="btn small ghost" id="hz"><svg class="i"><use href="#i-refresh"/></svg>Re-measure refresh</button></div>
+      <div class="stats" id="screenStats"></div>
+      <dl class="kv" id="screenInfo"></dl>
+    </section>
+  </div>
+
+  <section class="card stack mt">
+    <div class="row between">
+      <h2>Keyboard <small id="kbCount">0 keys tested</small></h2>
+      <button class="btn small ghost" id="kbReset"><svg class="i"><use href="#i-refresh"/></svg>Reset</button>
+    </div>
+    <div class="kb" id="kb" tabindex="0" role="application" aria-label="Keyboard tester: focus here and press keys. Escape leaves.">
+      <div class="kb-overlay" id="kbOverlay">Click here, then press keys</div>
+    </div>
+    <div class="row kb-last">
+      <span class="faint">Last key</span>
+      <code id="kbKey">—</code><code id="kbCode">—</code><code id="kbWhich">—</code>
+      <span class="grow"></span>
+      <span class="faint" id="kbOther"></span>
+    </div>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
